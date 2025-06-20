@@ -16,7 +16,8 @@ grpResp2Time(
 )
 }
 \arguments{
-\item{df}{Data frame containing information for a single group, containing columns grp; ID(subject ID: character); Time(positive: numeric); other Time terms (numeric); other individual characteristics covariates; as well columns of metabolite concentrations}
+\item{df}{Data frame containing information for a single group, containing columns grp; ID(subject ID: character); Time(positive: numeric); other Time terms (numeric); other individual characteristics covariates; as well columns of metabolite concentrations
+Note: All non-concentration columns must be complete (No missing values); concentration columns can have missing values in the forms of either numeric 0 or 'NA'.}
 
 \item{met_vec}{Vector of metabolite names}
 

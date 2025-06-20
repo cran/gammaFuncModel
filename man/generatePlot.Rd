@@ -17,7 +17,8 @@ generatePlot(
 \arguments{
 \item{graph}{character string, 'None' by default. If not 'None, in addition to returning models, produces pdf file of graphs based on the specific value of 'graph'.}
 
-\item{df}{Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other Time terms (numeric); other individidual characteristics covariates; as well columns of metabolite concentrations}
+\item{df}{Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other Time terms (numeric); other individidual characteristics covariates; as well columns of metabolite concentrations;
+Note: All non-concentration columns must be complete (No missing values); concentration columns can have missing values in the forms of either numeric 0 or 'NA'.}
 
 \item{met_vec}{the vector of metabolite names}
 
@@ -27,7 +28,7 @@ generatePlot(
 
 \item{models}{a list of fitted non-linear mixed effects metabolite models}
 
-\item{save_path}{location where the pdf file will be saved; default is NULL, i.e. pdf is saved to a temporary location}
+\item{save_path}{location (file path, not directory) where the pdf file will be saved (must end in '.pdf'); default is NULL, i.e. pdf is saved to a temporary location}
 }
 \value{
 A pdf file for fitted concenration curves that is saved to a user provided file location; otherwise saved to a temporary location

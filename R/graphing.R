@@ -1,11 +1,12 @@
 #' Function that generate plots for metabolite models
 #' @param graph character string, 'None' by default. If not 'None, in addition to returning models, produces pdf file of graphs based on the specific value of 'graph'. 
-#' @param df Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other Time terms (numeric); other individidual characteristics covariates; as well columns of metabolite concentrations
+#' @param df Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other Time terms (numeric); other individidual characteristics covariates; as well columns of metabolite concentrations;
+#'    Note: All non-concentration columns must be complete (No missing values); concentration columns can have missing values in the forms of either numeric 0 or 'NA'.
 #' @param met_vec the vector of metabolite names
 #' @param covariates Vector containing the names of the "ID" covariate, grouping covariate and other covariates excluding any "Time" covariates;
 #' @param grp is the grouping variable;
 #' @param models a list of fitted non-linear mixed effects metabolite models
-#' @param save_path location where the pdf file will be saved; default is NULL, i.e. pdf is saved to a temporary location
+#' @param save_path location (file path, not directory) where the pdf file will be saved (must end in '.pdf'); default is NULL, i.e. pdf is saved to a temporary location
 #' @return A pdf file for fitted concenration curves that is saved to a user provided file location; otherwise saved to a temporary location
 #' @importFrom Rdpack reprompt
 #' @importFrom dplyr select all_of group_by summarize %>%

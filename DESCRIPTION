@@ -1,8 +1,8 @@
 Package: gammaFuncModel
 Type: Package
 Title: Non-Linear Mixed Effects Model Based on the Gamma Function Form
-Version: 4.0
-Date: 2025-06-11
+Version: 5.0
+Date: 2025-06-20
 Authors@R: c(person(given = "Hongting",
                         family = "Chen",
                         role = c("aut", "cre"),
@@ -16,9 +16,9 @@ RoxygenNote: 7.2.3
 Imports: Rdpack, nlme, dplyr, cubature, rootSolve, patchwork, scales,
         ggplot2, future.apply, gridExtra, rlang, grDevices, stats, grid
 NeedsCompilation: no
-Packaged: 2025-06-11 15:14:42 UTC; htchen
+Packaged: 2025-06-20 14:08:35 UTC; htchen
 Author: Hongting Chen [aut, cre],
   Liming Liang [aut]
 Maintainer: Hongting Chen <hongtingchen@berkeley.edu>
 Repository: CRAN
-Date/Publication: 2025-06-13 19:50:02 UTC
+Date/Publication: 2025-06-20 14:30:02 UTC

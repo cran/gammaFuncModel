@@ -3,6 +3,7 @@
 #' to identify metabolites that responds to time differentially across dietary groups
 #' 
 #' @param data Data frame that contains the 'ID' column along with all covariates as well as concentration column, named 'Concentration', for a single metabolite
+#'     Note: All non-concentration columns must be complete (No missing values); the concentration column can have missing values in the forms of either numeric 0 or 'NA'.
 #' @param covariates Vector containing the names of the "ID" covariate, grouping covariate and other covariates excluding any "Time" covariates 
 #' @param time_terms Vector that contains all additional form of the covariate 'Time" (including the 'Time' covariate), and must contain 'log(Time)', other forms also include I(Time^2) and I(Time^3);
 #' @param grp Grouping variable;
@@ -51,8 +52,14 @@ gammaFunction <- function(data, covariates, time_terms = c("Time", "log(Time)"),
                           random_formula = ~ 1 + Time | ID/Diet, correlation_formula = corSymm(form = ~ Time | ID/Diet), 
                           weights = varIdent(form = ~ 1 | Time),
                           time_grp_inter = TRUE, return_ml_model = FALSE, include_grp) {
-  
-    data$Concentration[data$Concentration == 0] <- min(data$Concentration[data$Concentration != 0])/2
+    
+    # Imputation for missing data (missing concentration data is either 0 or NA)
+    nonzero_vals <- data$Concentration[data$Concentration != 0 & !is.na(data$Concentration)]
+    min_nonzero <- min(nonzero_vals)
+    
+    # Replace 0s and NAs with half of min_nonzero
+    data$Concentration[is.na(data$Concentration) | data$Concentration == 0] <- min_nonzero / 2
+
     covariates <- setdiff(covariates, "ID")
     
     # Adjust 'covariates' based on include_grp
@@ -155,6 +162,7 @@ gammaFunction <- function(data, covariates, time_terms = c("Time", "log(Time)"),
 #' Function that produces a summary table for coefficient estimates, their p-values and LRT p-values for every metabolite in the dataframe
 #'
 #' @param df Data frame containing columns Group(numeric or character); ID(subject ID: character); Time(positive: numeric); other Time terms (numeric); other individual characteristics covariates; as well columns of metabolite concentrations
+#'     Note: All non-concentration columns must be complete (No missing values); concentration columns can have missing values in the forms of either numeric 0 or 'NA'.
 #' @param met_vec Vector of metabolite names
 #' @param covariates Vector containing the names of the "ID" covariate, grouping covariate and other covariates excluding any "Time" covariates
 #' @param time_terms Vector that contains all additional form of the covariate 'Time" (including the 'Time' covariate), and must contain 'log(Time)', other forms also include I(Time^2) and I(Time^3);
@@ -199,7 +207,7 @@ diffGrpResponse <- function(df, met_vec, covariates, time_terms = c("Time", "log
   vecs <- list()
   REMLstatuses <- numeric()
   MLstatuses <- numeric()
-  sanityCheck(df)
+  sanityCheck(df, covariates)
   data <- df %>% select(all_of(covariates), "Time")
   covariates <- setdiff(covariates, "ID")
   
@@ -299,7 +307,7 @@ diffGrpResponse_parallel <- function(df, met_vec, covariates,
                               correlation_formula = corSymm(form = ~ Time | ID/Diet), 
                               weights = varIdent(form = ~ 1 | Time)) {
   
-  sanityCheck(df)  # Still run the sanity check
+  sanityCheck(df, covariates)  # Still run the sanity check
   
   base_data <- df %>% select(all_of(covariates), "Time")
   covariates <- setdiff(covariates, "ID")
@@ -371,6 +379,7 @@ diffGrpResponse_parallel <- function(df, met_vec, covariates,
 
 #' Function that produces a summary table for coefficient estimates, their p-values and LRT p-values for every metabolite in the dataframe, for a single Group
 #' @param df Data frame containing information for a single group, containing columns grp; ID(subject ID: character); Time(positive: numeric); other Time terms (numeric); other individual characteristics covariates; as well columns of metabolite concentrations
+#'     Note: All non-concentration columns must be complete (No missing values); concentration columns can have missing values in the forms of either numeric 0 or 'NA'.
 #' @param met_vec Vector of metabolite names
 #' @param covariates Vector containing the names of the "ID" covariate, grouping covariate and other covariates excluding any "Time" covariates
 #' @param time_terms Vector that contains all additional form of the covariate 'Time" (including the 'Time' covariate), and must contain 'log(Time)', other forms also include I(Time^2) and I(Time^3);
@@ -554,6 +563,7 @@ grpResp2Time_parallel <- function(df, met_vec, covariates, time_terms = c("Time"
 #' Function that produces a fitted gamma model for each metabolite
 #'
 #' @param df Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other Time terms (numeric); other individidual characteristics covariates; as well columns of metabolite concentrations
+#'     Note: All non-concentration columns must be complete (No missing values); concentration columns can have missing values in the forms of either numeric 0 or 'NA'.
 #' @param met_vec the vector of metabolite names
 #' @param covariates Vector containing the names of the "ID" covariate, grouping covariate and other covariates excluding any "Time" covariates
 #' @param time_terms is the vector that contains all additional form of the covariate 'Time" (including the 'Time' covariate), and must contain 'log(Time)', other forms also include I(Time^2) and I(Time^3);
@@ -646,6 +656,7 @@ generate_models <- function(df, met_vec, covariates, time_terms = c("Time", "log
 #' Function that produces Tmax property for a single individual in a particular group, for a specific metabolite
 #'
 #' @param data Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other individiual characteristics covariates(excluding other forms of 'Time')
+#'     Note: Data must be complete (No missing values);
 #' @param model Fitted model for the metabolite in question
 #' @param grp_var Value of the grouping variable
 #' @param ID Subject ID
@@ -734,6 +745,7 @@ calculate_Tmax <- function(data, model, grp_var, ID, grp_name = "Diet", ref = 1)
 #' Function that produces Cmax property for a single individual in a particular group, for a specific metabolite
 #'
 #' @param data Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other individiual characteristics covariates (exlcluding other forms of 'Time')
+#'     Note: Data must be complete (No missing values).
 #' @param model Fitted model for the metabolite in question
 #' @param grp_var Value of the grouping variable
 #' @param ID Subject ID
@@ -806,6 +818,7 @@ calculate_Cmax <- function(data, model, grp_var, ID, grp_name = "Diet",  Tmax) {
 #'Function produce predictions from the model 
 #'
 #' @param data Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other individiual characteristics covariates (exlcluding other forms of 'Time')
+#'     Note: Data must be complete (No missing values).
 #' @param model Fitted model for the metabolite in question
 #' @param grp_var Value of the grouping variable
 #' @param grp_name Name of the grouping variable. Default is 'Diet'
@@ -1107,6 +1120,7 @@ calculate_AUC = function(f, upperbound){
 #' Function that returns a data frame for Tmax, Cmax, half-life, AUC and AUCInf for metabolites
 #'
 #' @param df Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other individiual characteristics covariates (exlcluding other forms of 'Time')
+#'      Note: Data must be complete (No missing values).
 #' @param met_vec Vector of metabolite names
 #' @param models Fitted models for all metabolites of interest
 #' @param grp_name Name of the grouping variable

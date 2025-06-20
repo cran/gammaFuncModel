@@ -7,7 +7,8 @@
 calculate_Cmax(data, model, grp_var, ID, grp_name = "Diet", Tmax)
 }
 \arguments{
-\item{data}{Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other individiual characteristics covariates (exlcluding other forms of 'Time')}
+\item{data}{Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other individiual characteristics covariates (exlcluding other forms of 'Time')
+Note: Data must be complete (No missing values).}
 
 \item{model}{Fitted model for the metabolite in question}
 

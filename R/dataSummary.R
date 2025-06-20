@@ -1,7 +1,7 @@
 ### Functions to summarize the data
 
 ### Sanity check function
-sanityCheck <- function(df) {
+sanityCheck <- function(df, covariates) {
   # Check if the required columns exist
   if (!all(c("ID", "Time") %in% colnames(df))) {
     stop("Error: Data must contain a column 'ID' and a column 'Time'.")
@@ -13,9 +13,10 @@ sanityCheck <- function(df) {
     stop("Error: 'Time' should start with 1 instead of 0.")
   }
   
+  covariate_cols = c(covariates, "Time")
   # Check for NA values
-  if (any(is.na(df))) {
-    stop("Error: Data should not contain NAs.")
+  if (any(is.na(df[, !(names(df) %in% covariate_cols)]))) {
+    stop("Error: Concentration Data should not contain NAs.")
   }
 }
 

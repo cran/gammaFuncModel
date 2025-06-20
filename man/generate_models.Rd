@@ -18,7 +18,8 @@ generate_models(
 )
 }
 \arguments{
-\item{df}{Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other Time terms (numeric); other individidual characteristics covariates; as well columns of metabolite concentrations}
+\item{df}{Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other Time terms (numeric); other individidual characteristics covariates; as well columns of metabolite concentrations
+Note: All non-concentration columns must be complete (No missing values); concentration columns can have missing values in the forms of either numeric 0 or 'NA'.}
 
 \item{met_vec}{the vector of metabolite names}
 

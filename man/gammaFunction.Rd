@@ -20,7 +20,8 @@ gammaFunction(
 )
 }
 \arguments{
-\item{data}{Data frame that contains the 'ID' column along with all covariates as well as concentration column, named 'Concentration', for a single metabolite}
+\item{data}{Data frame that contains the 'ID' column along with all covariates as well as concentration column, named 'Concentration', for a single metabolite
+Note: All non-concentration columns must be complete (No missing values); the concentration column can have missing values in the forms of either numeric 0 or 'NA'.}
 
 \item{covariates}{Vector containing the names of the "ID" covariate, grouping covariate and other covariates excluding any "Time" covariates}
 

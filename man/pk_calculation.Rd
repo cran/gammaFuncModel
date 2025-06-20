@@ -7,7 +7,8 @@
 pk_calculation(df, met_vec, models, grp_name = "Diet", covariates, ref = 1)
 }
 \arguments{
-\item{df}{Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other individiual characteristics covariates (exlcluding other forms of 'Time')}
+\item{df}{Data frame containing columns Group(factor); ID(subject ID: character); Time(positive: numeric); other individiual characteristics covariates (exlcluding other forms of 'Time')
+Note: Data must be complete (No missing values).}
 
 \item{met_vec}{Vector of metabolite names}
 
